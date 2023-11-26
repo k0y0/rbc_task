@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test!{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+
+
+    <br>
+    <br>
+    {% if statistics is defined and statistics is not null %}
+        <h3>ranking 30 najlepiej sprzedających się leków</h3>
+        <table>
+            {% set break = false %}
+            {% for name,sale in statistics.topSale.data  %}
+                {% if break %}
+                {% else %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ name }}</td>
+                        <td>{{ sale }}</td>
+                    </tr>
+                {% endif %}
+                {% if loop.index == 30 %} {% set break = true %} {% endif %}
+            {% endfor %}
+        </table>
+
+        <h3>kraj z którego pochoidzi największa liczba klientów w grupie</h3>
+        {% for country in statistics.countryByGroup.maxCountry %}
+            {% if loop.index0 != 0 %},{% endif %}
+            {{ country }}
+        {% endfor %}
+
+
+        <h3>największa ilość w plikach według statusu matrymonialnego</h3>
+        <table>
+            {% for status, data in statistics.statusByFileType.max %}
+                <tr>
+                    <td>{{ status }}</td>
+                    <td>
+                        {% for fileType in data %}
+                            {% if loop.index0 != 0 %},{% endif %}
+                            {{ fileType }}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h3>sumaryczna ilość spółgłosek: {{ statistics.consonantsSum }}</h3>
+    {% endif %}
+{% endblock %}
